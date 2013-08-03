@@ -13,11 +13,10 @@ class SortableListView(ListView):
         allowed_sort_fields[default_sort_field]['default_direction']
     default_sort = default_sort_order + default_sort_field
 
-    def dispatch(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         self.sort_order, self.sort_field = self.set_sort(request)
         self.sort_link_list = self.get_sort_link_list(request)
-        return super(SortableListView,
-                     self).dispatch(request, *args, **kwargs)
+        return super(SortableListView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(SortableListView,

@@ -1,4 +1,4 @@
-from mock import MagicMock
+from mock import patch
 from django.test import TestCase
 from django.test.client import RequestFactory
 from sortable_listview.views import SortableListView
@@ -10,12 +10,20 @@ class TestSortableListView(SortableListView):
     model = TestModel
 
 
-class TestDispatch(TestCase):
+class TestGet(TestCase):
 
-    def test_dispatch_calls_set_sort_with_request(self):
-        view = TestSortableListView()
-        view.set_sort = MagicMock(return_value=('-', 'id'))
-        request = view.request = RequestFactory().get('/')
-        # Calling the view calls the dispatch method
-        view.dispatch(request)
-        view.set_sort.assert_called_once_with(request)
+    def setUp(self):
+        self.view = TestSortableListView.as_view()
+        self.request = RequestFactory().get('/')
+
+    def test_get_calls_set_sort_with_request(self):
+        with patch('tests.tests.TestSortableListView.set_sort') as set_sort:
+            set_sort.return_value = ('-', 'id')
+            self.view(self.request)
+            set_sort.assert_called_once_with(self.request)
+
+    def test_get_calls_sort_link_list_with_request(self):
+        with patch('tests.tests.TestSortableListView.set_sort') as set_sort:
+            set_sort.return_value = ('-', 'id')
+            self.view(self.request)
+            set_sort.assert_called_once_with(self.request)
