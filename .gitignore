@@ -1,0 +1,8 @@
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+
+# Vim
+*.swp
