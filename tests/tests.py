@@ -207,3 +207,43 @@ class TestToggleSortOrder(TestCase):
         view.sort_order = ''
         toggled = view.toggle_sort_order()
         self.assertEqual(toggled, '-')
+
+
+class TestGetSortLinkList(TestCase):
+
+    def test_all_fields_are_set_correctly_and_returned_as_list_of_dict(self):
+        view = TestSortableListView()
+        view.allowed_sort_fields = {'title': {'default_direction': '-',
+                                              'verbose_name': 'Tit'},
+                                    'name': {'default_direction': '',
+                                             'verbose_name': 'Nam'}
+                                    }
+        view.get_basic_sort_link = MagicMock(return_value='basic_sort_link')
+        view.get_sort_indicator = MagicMock(return_value='sort_indicator')
+        sort_link_list = view.get_sort_link_list(RequestFactory())
+        expected_list = [{'attrs': 'title',
+                          'path': 'basic_sort_link',
+                          'indicator': 'sort_indicator',
+                          'title': 'Tit'},
+                         {'attrs': 'name',
+                          'path': 'basic_sort_link',
+                          'indicator': 'sort_indicator',
+                          'title': 'Nam'}]
+        self.assertItemsEqual(sort_link_list, expected_list)
+
+
+class TestBaseicSortLink(TestCase):
+
+    def test_if_sort_string_is_empty_just_returns_request_path(self):
+        view = TestSortableListView()
+        request = RequestFactory().get('/about/')
+        view.get_next_sort_string = MagicMock(return_value='')
+        returned_link = view.get_basic_sort_link(request, '')
+        self.assertEqual(returned_link, '/about/')
+
+    def test_if_sort_string_not_empty_appends_string_with_query_sep(self):
+        view = TestSortableListView()
+        request = RequestFactory().get('/')
+        view.get_next_sort_string = MagicMock(return_value='sort=-sf')
+        returned_link = view.get_basic_sort_link(request, '')
+        self.assertEqual(returned_link, '/?sort=-sf')
