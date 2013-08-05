@@ -1,12 +1,15 @@
 <p>
+<strong>Sort by: </strong>
 {% for sort_link in sort_link_list %}
-<span class="sort-link {{ sort_link.attrs }}">
-		<a class="btn" href="{{ sort_link.path }}">
+	<span class="sort-link {{ sort_link.attrs }}">
+		<a class="btn btn-primary btn-small" href="{{ sort_link.path }}">
 				<span class="{{ sort_link.indicator }}">
 						{{ sort_link.title }}
-						{% if sort_link.indicator == 'sort-asc' %}▲ {% endif %}
-						{% if sort_link.indicator == 'sort-desc' %}▼ {% endif %}
+						{% if sort_link.indicator == 'sort-asc' %}▲{% endif %}
+						{% if sort_link.indicator == 'sort-desc' %}▼{% endif %}
 				</span>
-		</a>                                                                                                                                                                                                                     </span>                                                                                                                                                                                                                      {% endfor %}
+		</a>
+	</span>
+{% endfor %}
 </p>
 
