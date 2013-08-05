@@ -7,9 +7,6 @@ if not settings.configured:
     settings.configure(
         INSTALLED_APPS=['sortable_listview', 'tests'],
         DATABASES={'default': {'ENGINE': 'django.db.backends.sqlite3'}},
-        MEDIA_ROOT=os.path.join(os.path.dirname(__file__), 'media'),
-        MEDIA_URL='/media/',
-        STATIC_URL='/static/'
     )
 
 
