@@ -9,9 +9,18 @@ class SortableListView(ListView):
     sort_parameter = 'sort'  # the get parameter e.g. ?page=1&sort=2
     # End of Defaults
 
-    default_sort_order = \
-        allowed_sort_fields[default_sort_field]['default_direction']
-    default_sort = default_sort_order + default_sort_field
+    @property
+    def sort(self):
+        return self.sort_order + self.sort_field
+
+    @property
+    def default_sort_order(self):
+        return self.allowed_sort_fields[
+            self.default_sort_field]['default_direction']
+
+    @property
+    def default_sort(self):
+        return self.default_sort_order + self.default_sort_field
 
     def get(self, request, *args, **kwargs):
         self.sort_order, self.sort_field = self.set_sort(request)
@@ -29,10 +38,6 @@ class SortableListView(ListView):
         qs = super(SortableListView, self).get_queryset()
         qs = qs.order_by(self.sort)
         return qs
-
-    @property
-    def sort(self):
-        return self.sort_order + self.sort_field
 
     def set_sort(self, request):
         """

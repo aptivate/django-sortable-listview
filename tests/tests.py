@@ -62,13 +62,25 @@ class TestGetContextData(TestCase):
         view.get_sort_string.assert_called_once_with()
 
 
-class TestSortProperty(TestCase):
+class TestProperties(TestCase):
 
-    def test_assembles_sort_order_and_sort_field(self):
+    def test_sort_assembles_sort_order_and_sort_field(self):
         view = TestSortableListView()
         view.sort_order = '-test'
         view.sort_field = 'sort'
         self.assertEqual(view.sort, '-testsort')
+
+    def test_default_sort_order_gets_default_direction_of_default_field(self):
+        view = TestSortableListView()
+        view.default_sort_field = 'title'
+        view.allowed_sort_fields = {'title': {'default_direction': ''}}
+        self.assertEqual(view.default_sort_order, '')
+
+    def test_default_sort_assembles_default_order_and_default_field(self):
+        view = TestSortableListView()
+        view.allowed_sort_fields = {'value': {'default_direction': 'test'}}
+        view.default_sort_field = 'value'
+        self.assertEqual(view.default_sort, 'testvalue')
 
 
 class TestGetQueryset(TestCase):
@@ -84,43 +96,39 @@ class TestGetQueryset(TestCase):
 
 class TestSetSort(TestCase):
 
+    def setUp(self):
+        self.view = TestSortableListView()
+        self.view.default_sort_field = 'sortfield'
+        self.view.allowed_sort_fields = {'sortfield':
+                                         {'default_direction': ''}}
+
     def test_if_not_reverse_sort_order_and_sort_field_set(self):
-        view = TestSortableListView()
-        view.allowed_sort_fields = {'sortfield': {}}
         request = RequestFactory().get('/', {'sort': 'sortfield'})
-        actual = view.set_sort(request)
+        actual = self.view.set_sort(request)
         self.assertTupleEqual(('', 'sortfield'), actual)
 
     def test_if_reverse_sort_order_set_reverse_and_sort_field_set(self):
-        view = TestSortableListView()
-        view.allowed_sort_fields = {'sortfield': {}}
         request = RequestFactory().get('/', {'sort': '-sortfield'})
-        actual = view.set_sort(request)
+        actual = self.view.set_sort(request)
         self.assertTupleEqual(('-', 'sortfield'), actual)
 
     def test_if_no_sort_parameter_provided_default_is_used(self):
-        view = TestSortableListView()
-        view.default_sort_field = 'sortfield2'
-        view.allowed_sort_fields = {'sortfield1': {},
-                                    'sortfield2': {}}
+        self.view.default_sort_field = 'sortfield2'
+        self.view.allowed_sort_fields.update({'sortfield2':
+                                              {'default_direction': '-'}})
         request = RequestFactory().get('/')
-        actual = view.set_sort(request)
-        # NB The reverse default direction is inherited from defaults unless
-        # you specify otherwise
+        actual = self.view.set_sort(request)
         self.assertTupleEqual(('-', 'sortfield2'), actual)
 
     def test_if_sort_field_is_not_in_allowed_sort_fields_default_is_used(self):
-        view = TestSortableListView()
-        request = RequestFactory().get('/', {'sort': 'sortfield'})
-        actual = view.set_sort(request)
-        self.assertTupleEqual(('-', 'id'), actual)
+        request = RequestFactory().get('/', {'sort': 'other'})
+        actual = self.view.set_sort(request)
+        self.assertTupleEqual(('', 'sortfield'), actual)
 
     def test_respects_alternate_sort_parameter(self):
-        view = TestSortableListView()
-        view.allowed_sort_fields = {'sortfield': {}}
-        view.sort_parameter = 's'
+        self.view.sort_parameter = 's'
         request = RequestFactory().get('/', {'s': '-sortfield'})
-        actual = view.set_sort(request)
+        actual = self.view.set_sort(request)
         self.assertTupleEqual(('-', 'sortfield'), actual)
 
 
@@ -135,8 +143,7 @@ class TestGetSortString(TestCase):
 
     def test_empty_string_is_returned_if_sort_is_default_sort(self):
         view = TestSortableListView()
-        view.default_sort = '-blob'
-        sort_string = view.get_sort_string('-blob')
+        sort_string = view.get_sort_string('-id')
         self.assertEqual('', sort_string)
 
 
