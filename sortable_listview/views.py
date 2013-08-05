@@ -58,23 +58,42 @@ class SortableListView(ListView):
             sort = self.sort
         sort_string = ''
         if not sort == self.default_sort:
-            sort_string = self.sort_parameter + '=' + self.sort
+            sort_string = self.sort_parameter + '=' + sort
         return sort_string
 
     def get_next_sort_string(self, field):
         """
         If we're already sorted by the field then the sort query
-        returned reverses the sort order. If the next sort is the same as the
-        default sort order then no sort_query is required.
+        returned reverses the sort order.
         """
-        # If we're currently sorted by that field then the next sort is
-        # the reversed sort order
+        # self.sort_field is the currect sort field
         if field == self.sort_field:
             next_sort = self.toggle_sort_order() + field
         else:
-            # Use the default sort order for that field
-            next_sort = self.default_sort
+            default_order_for_field = \
+                self.allowed_sort_fields[field]['default_direction']
+            next_sort = default_order_for_field + field
         return self.get_sort_string(next_sort)
+
+    def get_sort_indicator(self, field):
+        """
+        Returns a sort class for the active sort only. That is, if field is not
+        sort_field, then nothing will be returned becaues the sort is not
+        active.
+        """
+        indicator = ''
+        if field == self.sort_field:
+            indicator = 'sort-asc'
+            if self.sort_order == '-':
+                indicator = 'sort-desc'
+        return indicator
+
+    def toggle_sort_order(self):
+        if self.sort_order == '-':
+            toggled_sort_order = ''
+        if self.sort_order == '':
+            toggled_sort_order = '-'
+        return toggled_sort_order
 
     def get_sort_link_list(self, request):
         sort_links = []
@@ -98,30 +117,3 @@ class SortableListView(ListView):
             return request.path + '?' + sort_string
         else:
             return request.path
-
-    def get_sort_indicator(self, field, sort_order=None, sort_field=None):
-        """
-        Returns a sort class for the active sort only. That is, if field is not
-        sort_field, then nothing will be returned becaues the sort is not
-        active.
-        """
-        if not sort_order:
-            sort_order = self.sort_order
-        if not sort_field:
-            sort_field = self.sort_field
-        sort_class = ''
-        if sort_field == field:
-            sort_class = 'sort-asc'
-            if sort_order == '-':
-                sort_class = 'sort-desc'
-        return sort_class
-
-    def toggle_sort_order(self, sort_order=None):
-        if not sort_order:
-            sort_order = self.sort_order
-
-        if sort_order == '-':
-            toggled_sort_order = ''
-        if sort_order == '':
-            toggled_sort_order = '-'
-        return toggled_sort_order
