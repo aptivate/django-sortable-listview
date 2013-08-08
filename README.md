@@ -12,6 +12,8 @@ Features:
 
 Install
 =======
+Using pip::
+
     pip install django-sortable-listview
 
 If you want to use the provided temaplates and CSS add ``'sortable_listview'`` to your INSTALLED_APPS in your django settings.
@@ -23,12 +25,12 @@ Example Project
 ===============
 ![Screenshot of example project](/example_project/screenshot.png)
 
-To run the example project. First make sure django and django-sortable-listview are on your python path. For example, from inside a virtualenv:
+To run the example project. First make sure django and django-sortable-listview are on your python path. For example, from inside a virtualenv::
 
     pip install django
     pip install django-sortable-listview
 
-Then from your cloned folder:
+Then from your cloned folder::
 
     cd example_project
     python manage.py runserver
@@ -38,6 +40,6 @@ You should be able to see the example project at localhost:8000. A database is p
 Development and Tests
 =====================
 
-To run the tests:
+To run the tests::
 
     python setup.py test
