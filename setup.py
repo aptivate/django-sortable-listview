@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-sortable-listview',
-    version='0.22',
+    version='0.23',
     packages=['sortable_listview'],
     include_package_data=True,
     license=LICENSE,
