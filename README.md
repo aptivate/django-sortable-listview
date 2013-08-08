@@ -4,7 +4,7 @@ An extension of django's ListView that provides sorting
 
 Install
 =======
-Add to your python path.
+    pip install django-sortable-listview
 
 If you want to use the provided temaplates and CSS add ``'sortable_listview'`` to your INSTALLED_APPS in your django settings.
 
@@ -18,7 +18,7 @@ Example Project
 To run the example project. First make sure django and django-sortable-listview are on your python path. For example, from inside a virtualenv:
 
     pip install django
-    pip install git+git://github.com/aptivate/django-sortable-listview
+    pip install django-sortable-listview
 
 Then from your cloned folder:
 
