@@ -1,6 +1,14 @@
 django-sortable-listview
 ========================
-An extension of django's ListView that provides sorting
+An extension of django's ListView that provides sorting.
+
+Features:
+- Works with django's built in pagination.
+- Contains templates & css for pagination and sort buttons (or just use the context_data and build your own).
+- Adds an arrow to show the sort direction on the active sort.
+- Knows what the next sort is (i.e. if you're already sorted by title in one direction, clicking on the title button/link again will sort it in the other direction).
+- Lets you specify default sort for your list (defaults to -id) and for each of the sortable fields.
+- Modifies the queryset, so your database does your sorting.
 
 Install
 =======
