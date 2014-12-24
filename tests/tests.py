@@ -43,12 +43,23 @@ class TestGetContextData(TestCase):
     def test_sets_sort_link_list_context(self):
         view = TestSortableListView()
         view.get_sort_string = MagicMock()
+        view.get_querystring = MagicMock()
         view.sort_link_list = ['hola', 'mundo']
         context = view.get_context_data(object_list=[])
         self.assertEqual(context['sort_link_list'], ['hola', 'mundo'])
 
+    def test_sets_querystring_context(self):
+        view = TestSortableListView()
+        view.get_sort_string = MagicMock()
+        view.get_querystring = MagicMock(return_value='foo=bar')
+        view.sort_link_list = []
+        view.object_list = []
+        context = view.get_context_data(object_list=[])
+        self.assertEqual(context['current_querystring'], 'foo=bar')
+
     def test_sets_current_sort_query_context(self):
         view = TestSortableListView()
+        view.get_querystring = MagicMock()
         view.get_sort_string = MagicMock(return_value='sort=sortme')
         view.sort_link_list = []
         context = view.get_context_data(object_list=[])
@@ -57,6 +68,7 @@ class TestGetContextData(TestCase):
     def test_calls_get_sort_string(self):
         view = TestSortableListView()
         view.get_sort_string = MagicMock()
+        view.get_querystring = MagicMock()
         view.sort_link_list = []
         view.get_context_data(object_list=[])
         view.get_sort_string.assert_called_once_with()
@@ -92,6 +104,56 @@ class TestGetQueryset(TestCase):
         with patch('django.db.models.query.QuerySet.order_by') as mock:
             view.get_queryset()
             mock.assert_called_once_with('testsortstuff')
+
+
+class TestGetQueryStringParameterToRemove(TestCase):
+
+    def setUp(self):
+        self.view = TestSortableListView()
+        self.sort_parameter = 'sort'
+
+    def test_if_del_query_parameters_is_empty(self):
+        self.view.del_query_parameters = []
+        actual = self.view.get_querystring_parameter_to_remove()
+        self.assertEqual(actual, ['sort'])
+
+    def test_if_del_query_parameters_is_not_empty(self):
+        self.view.del_query_parameters = ['foo', 'bar']
+        actual = self.view.get_querystring_parameter_to_remove()
+        self.assertEqual(actual, ['foo', 'bar', 'sort'])
+
+
+class TestGetQueryString(TestCase):
+
+    def setUp(self):
+        self.view = TestSortableListView()
+
+    def test_if_nothing_to_delete_and_no_parameter(self):
+        self.view.get_querystring_parameter_to_remove = MagicMock(
+            return_value=[])
+        params = {}
+        request = RequestFactory().get('/', params)
+        self.view.request = request
+        actual = self.view.get_querystring()
+        self.assertEqual(actual, '')
+
+    def test_if_nothing_to_delete_and_there_are_parameters(self):
+        self.view.get_querystring_parameter_to_remove = MagicMock(
+            return_value=[])
+        params = {'foo': 'bar'}
+        request = RequestFactory().get('/', params)
+        self.view.request = request
+        actual = self.view.get_querystring()
+        self.assertEqual(actual, 'foo=bar')
+
+    def test_if_there_are_params_to_delete_and_there_are_parameters(self):
+        self.view.get_querystring_parameter_to_remove = MagicMock(
+            return_value=['sort', 'page'])
+        params = {'foo': 'bar', 'page': '1', 'sort': 'sortfield'}
+        request = RequestFactory().get('/', params)
+        self.view.request = request
+        actual = self.view.get_querystring()
+        self.assertEqual(actual, 'foo=bar')
 
 
 class TestSetSort(TestCase):
@@ -241,16 +303,38 @@ class TestGetSortLinkList(TestCase):
 
 class TestBaseicSortLink(TestCase):
 
-    def test_if_sort_string_is_empty_just_returns_request_path(self):
+    def test_sort_string_is_empty_and_querystring_is_empty(self):
+        # should just returns request path
         view = TestSortableListView()
         request = RequestFactory().get('/about/')
+        view.get_querystring = MagicMock(return_value='')
         view.get_next_sort_string = MagicMock(return_value='')
         returned_link = view.get_basic_sort_link(request, '')
         self.assertEqual(returned_link, '/about/')
 
-    def test_if_sort_string_not_empty_appends_string_with_query_sep(self):
+    def test_sort_string_is_not_empty_and_querystring_is_empty(self):
+        # should append only sort string with query sep
         view = TestSortableListView()
         request = RequestFactory().get('/')
+        view.get_querystring = MagicMock(return_value='')
         view.get_next_sort_string = MagicMock(return_value='sort=-sf')
         returned_link = view.get_basic_sort_link(request, '')
         self.assertEqual(returned_link, '/?sort=-sf')
+
+    def test_sort_string_is_empty_and_querystring_is_not_empty(self):
+        # should append only query string with query sep
+        view = TestSortableListView()
+        request = RequestFactory().get('/')
+        view.get_querystring = MagicMock(return_value='foo=bar')
+        view.get_next_sort_string = MagicMock(return_value='')
+        returned_link = view.get_basic_sort_link(request, '')
+        self.assertEqual(returned_link, '/?foo=bar')
+
+    def test_sort_string_is_not_empty_and_querystring_is_not_empty(self):
+        # should append only both query string and sort string with query sep
+        view = TestSortableListView()
+        request = RequestFactory().get('/')
+        view.get_querystring = MagicMock(return_value='foo=bar')
+        view.get_next_sort_string = MagicMock(return_value='sort=-sf')
+        returned_link = view.get_basic_sort_link(request, '')
+        self.assertEqual(returned_link, '/?sort=-sf&foo=bar')
