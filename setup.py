@@ -18,7 +18,7 @@ setup(
     url='https://github.com/aptivate/django-sortable-listview',
     author='Sarah Bird',
     author_email='sarah@aptivate.org',
-    install_requires=['django>=1.4, <1.6'],
+    install_requires=['django>=1.4'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Web Environment',
