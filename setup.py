@@ -2,6 +2,7 @@ import os
 from setuptools import setup
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
+CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.md')).read()
 LICENSE = open(os.path.join(os.path.dirname(__file__), 'LICENSE.txt')).read()
 
 # allow setup.py to be run from any path
@@ -14,7 +15,7 @@ setup(
     include_package_data=True,
     license=LICENSE,
     description='An extension of django\'s ListView that provides sorting',
-    long_description=README,
+    long_description=README + CHANGELOG,
     url='https://github.com/aptivate/django-sortable-listview',
     author='Sarah Bird',
     author_email='sarah@aptivate.org',
