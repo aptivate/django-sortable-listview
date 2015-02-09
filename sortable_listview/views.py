@@ -1,4 +1,10 @@
-from urllib import urlencode
+from __future__ import unicode_literals
+
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
+
 from django.views.generic import ListView
 
 

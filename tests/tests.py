@@ -1,4 +1,10 @@
-from mock import patch, MagicMock
+from __future__ import unicode_literals
+
+try:
+    from mock import patch, MagicMock
+except ImportError:
+    from unittest.mock import patch, MagicMock
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from sortable_listview.views import SortableListView
@@ -301,7 +307,10 @@ class TestGetSortLinkList(TestCase):
                           'path': 'basic_sort_link',
                           'indicator': 'sort_indicator',
                           'title': 'Nam'}]
-        self.assertItemsEqual(sort_link_list, expected_list)
+        try:
+            self.assertItemsEqual(sort_link_list, expected_list)
+        except AttributeError:
+            self.assertCountEqual(sort_link_list, expected_list)
 
 
 class TestBasicSortLink(TestCase):

@@ -1,0 +1,11 @@
+tox
+
+## If you wish to run the tests locally and not all the tests
+## run by tox, uncomment the following for Python 2
+# mock
+# Django
+# coverage
+
+## Or for Python 3
+# Django 
+# coverage
