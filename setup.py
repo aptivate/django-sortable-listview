@@ -9,7 +9,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-sortable-listview',
-    version='0.23',
+    version='0.30',
     packages=['sortable_listview'],
     include_package_data=True,
     license=LICENSE,
@@ -20,7 +20,7 @@ setup(
     author_email='sarah@aptivate.org',
     install_requires=['django>=1.4'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
