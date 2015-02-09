@@ -304,7 +304,7 @@ class TestGetSortLinkList(TestCase):
         self.assertItemsEqual(sort_link_list, expected_list)
 
 
-class TestBaseicSortLink(TestCase):
+class TestBasicSortLink(TestCase):
 
     def test_sort_string_is_empty_and_querystring_is_empty(self):
         # should just returns request path
