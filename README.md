@@ -47,3 +47,7 @@ For your development setup::
 To run the tests::
 
     tox
+
+You may not want to run the whole tox suite when you are doing development. 
+In this case, uncomment the extra lines in requirements-dev.txt, but please
+don't commit these changes. (Suggestions welcome on a better way to manage this)
