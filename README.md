@@ -11,6 +11,16 @@ Features:
 - Knows what the next sort is (i.e. if you're already sorted by title in one direction, clicking on the title button/link again will sort it in the other direction).
 - Lets you specify default sort for your list (defaults to -id) and for each of the sortable fields.
 - Modifies the queryset, so your database does your sorting.
+- Maintains additional query strings (configurable)
+
+Requirements
+============
+
+    * Python (2.6, 2.7, 3.2, 3.3, 3.4)
+    * Django (1.4, 1.5, 1.6, 1.7)
+
+(Tested against the latest version of each e.g. currently Python 2.7.4 & Django 1.5.12)
+
 
 Install
 =======
