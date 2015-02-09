@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/aptivate/django-sortable-listview.svg?branch=py2py3)](https://travis-ci.org/aptivate/django-sortable-listview) [![Coverage Status](https://coveralls.io/repos/aptivate/django-sortable-listview/badge.svg?branch=py2py3)](https://coveralls.io/r/aptivate/django-sortable-listview?branch=py2py3)
+[![Build Status](https://travis-ci.org/aptivate/django-sortable-listview.svg?branch=master)](https://travis-ci.org/aptivate/django-sortable-listview) [![Coverage Status](https://coveralls.io/repos/aptivate/django-sortable-listview/badge.svg?branch=master)](https://coveralls.io/r/aptivate/django-sortable-listview?branch=py2py3)
 
 django-sortable-listview
 ========================
