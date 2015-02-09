@@ -40,6 +40,10 @@ You should be able to see the example project at localhost:8000. A database is p
 Development and Tests
 =====================
 
+For your development setup::
+
+    pip install -r requirements-dev.txt
+
 To run the tests::
 
-    python setup.py test
+    tox
