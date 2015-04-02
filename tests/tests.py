@@ -155,6 +155,15 @@ class TestGetQueryString(TestCase):
         actual = self.view.get_querystring()
         self.assertEqual(actual, 'foo=bar')
 
+    def test_if_nothing_to_delete_and_there_are_multivalue_parameters(self):
+        self.view.get_querystring_parameter_to_remove = MagicMock(
+            return_value=[])
+        params = {'foo': ['bar1', 'bar2']}
+        request = RequestFactory().get('/', params)
+        self.view.request = request
+        actual = self.view.get_querystring()
+        self.assertEqual(actual, 'foo=bar1&foo=bar2')
+
     def test_if_there_are_params_to_delete_and_there_are_parameters(self):
         self.view.get_querystring_parameter_to_remove = MagicMock(
             return_value=['sort', 'page'])
