@@ -30,8 +30,11 @@ def runtests(*test_args):
     if hasattr(django, 'setup'):
         django.setup()
 
-    from django.test.simple import DjangoTestSuiteRunner
-    failures = DjangoTestSuiteRunner(
+    try:
+        from django.test.simple import DjangoTestSuiteRunner as TestRunner
+    except ImportError:
+        from django.test.runner import DiscoverRunner as TestRunner
+    failures = TestRunner(
         verbosity=1, interactive=True, failfast=False).run_tests(test_args)
     sys.exit(failures)
 
