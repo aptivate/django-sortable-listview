@@ -2,8 +2,9 @@ from __future__ import unicode_literals
 
 try:
     from urllib import urlencode
+    from urlparse import urlparse, parse_qs
 except ImportError:
-    from urllib.parse import urlencode
+    from urllib.parse import urlencode, urlparse, parse_qs
 
 from django.views.generic import ListView
 
@@ -60,12 +61,13 @@ class SortableListView(ListView):
         arguments that we don't want to preserve (sort parameter, 'page')
         """
         to_remove = self.get_querystring_parameter_to_remove()
-        query_dict = self.request.GET.copy()
+        query_string = urlparse(self.request.get_full_path()).query
+        query_dict = parse_qs(query_string)
         for arg in to_remove:
             if arg in query_dict:
                 del query_dict[arg]
-        query_string = urlencode(query_dict)
-        return query_string
+        clean_query_string = urlencode(query_dict, doseq=True)
+        return clean_query_string
 
     def set_sort(self, request):
         """
