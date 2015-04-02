@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.41
+
+ * Further querystring improvement (thanks @fle)
+ * Test against Django 1.8
+
 ## 0.40
   
   * Add support for Python 3
