@@ -1,6 +1,16 @@
 import os
 from setuptools import setup
 
+install_requires = [
+    'django>=1.4',
+]
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    # add backport to list of required modules
+    install_requires.append('ordereddict')
+
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.md')).read()
 LICENSE = open(os.path.join(os.path.dirname(__file__), 'LICENSE.txt')).read()
@@ -19,7 +29,7 @@ setup(
     url='https://github.com/aptivate/django-sortable-listview',
     author='Sarah Bird',
     author_email='sarah@aptivate.org',
-    install_requires=['django>=1.4'],
+    install_requires=install_requires,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
