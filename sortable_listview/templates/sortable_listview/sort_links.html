@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <p class="sortable-links">
-    <strong class="sortable-label">{% trans 'Sort by' %}: </strong>
+    <span class="sortable-label">{% trans 'Sort by' %}: </span>
     {% for sort_link in sort_link_list %}
     	<span class="sort-link {{ sort_link.attrs }}">
     		<a class="btn btn-primary btn-small btn-sm" href="{{ sort_link.path }}">
