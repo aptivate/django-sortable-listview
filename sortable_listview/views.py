@@ -6,17 +6,50 @@ try:
 except ImportError:
     from urllib.parse import urlencode, urlparse, parse_qs
 
+try:
+    # try with the standard library
+    from collections import OrderedDict
+except ImportError:
+    # fallback to Python 2.6-2.4 back-port
+    from ordereddict import OrderedDict
+
 from django.views.generic import ListView
 
 
 class SortableListView(ListView):
     # Defaults, you probably want to specify these when you subclass
     default_sort_field = 'id'
-    allowed_sort_fields = {default_sort_field: {'default_direction': '-',
-                                                'verbose_name': 'ID'}}
+
     sort_parameter = 'sort'  # the get parameter e.g. ?page=1&sort=2
     del_query_parameters = ['page']  # get paramaters we don't want to preserve
     # End of Defaults
+
+    def __init__(self, *args, **kwargs):
+        """
+        Convert allowed_sort_fields to an OrderedDict data structure to preserve
+        ordering if an ordered data structure (e.g. a tuple of tuples) is provided
+        """
+        super(SortableListView, self).__init__(*args, **kwargs)
+        self._allowed_sort_fields = (OrderedDict(self.allowed_sort_fields)
+            if hasattr(self, 'allowed_sort_fields')
+            else OrderedDict(((self.default_sort_field,
+                             {'default_direction': '-',
+                              'verbose_name': 'ID'}),)))
+
+    @property
+    def allowed_sort_fields(self):
+        """
+        Return internal OrderedDict
+        """
+        return self._allowed_sort_fields
+
+    @allowed_sort_fields.setter
+    def allowed_sort_fields(self, value):
+        """
+        Ensure that setting allowed_sort_fields after initialisation
+        converts to an OrderedDict
+        """
+        self._allowed_sort_fields = OrderedDict(value)
 
     @property
     def sort(self):
@@ -24,7 +57,7 @@ class SortableListView(ListView):
 
     @property
     def default_sort_order(self):
-        return self.allowed_sort_fields[
+        return self._allowed_sort_fields[
             self.default_sort_field]['default_direction']
 
     @property
@@ -83,7 +116,7 @@ class SortableListView(ListView):
             sort_order = ''
             sort_field = sort_request
         # Invalid sort requests fail silently
-        if not sort_field in self.allowed_sort_fields:
+        if not sort_field in self._allowed_sort_fields:
             sort_order = self.default_sort_order
             sort_field = self.default_sort_field
         return (sort_order, sort_field)
@@ -106,7 +139,7 @@ class SortableListView(ListView):
             next_sort = self.toggle_sort_order() + field
         else:
             default_order_for_field = \
-                self.allowed_sort_fields[field]['default_direction']
+                self._allowed_sort_fields[field]['default_direction']
             next_sort = default_order_for_field + field
         return self.get_sort_string(next_sort)
 
@@ -132,12 +165,12 @@ class SortableListView(ListView):
 
     def get_sort_link_list(self, request):
         sort_links = []
-        for sort_field in self.allowed_sort_fields:
+        for sort_field in self._allowed_sort_fields:
             sort_link = {
                 'attrs': sort_field,
                 'path': self.get_basic_sort_link(request, sort_field),
                 'indicator': self.get_sort_indicator(sort_field),
-                'title': self.allowed_sort_fields[sort_field]['verbose_name']}
+                'title': self._allowed_sort_fields[sort_field]['verbose_name']}
             sort_links.append(sort_link)
         return sort_links
 

@@ -1,6 +1,13 @@
 from __future__ import unicode_literals
 
 try:
+    # try with the standard library
+    from collections import OrderedDict
+except ImportError:
+    # fallback to Python 2.6-2.4 back-port
+    from ordereddict import OrderedDict
+
+try:
     from mock import patch, MagicMock
 except ImportError:
     from unittest.mock import patch, MagicMock
@@ -10,6 +17,7 @@ from django.test.client import RequestFactory
 from sortable_listview.views import SortableListView
 from .models import TestModel
 
+import itertools
 
 class TestSortableListView(SortableListView):
     # Required configuration
@@ -103,6 +111,51 @@ class TestProperties(TestCase):
         view.default_sort_field = 'value'
         self.assertEqual(view.default_sort, 'testvalue')
 
+    def test_allowed_sort_fields_default(self):
+        default_allowed_sort_fields = (('id', {'default_direction': '-', 'verbose_name': 'ID'}),)
+        expected = OrderedDict(default_allowed_sort_fields)
+        view = TestSortableListView()
+        self.assertTrue(isinstance(view.allowed_sort_fields, OrderedDict))
+        try:
+            self.assertItemsEqual(view.allowed_sort_fields, expected)
+        except AttributeError:
+            self.assertCountEqual(view.allowed_sort_fields, expected)
+
+    def test_allowed_sort_fields_dict(self):
+        unordered_allowed_sort_fields = {
+            'title': {'default_direction': '-',
+                  'verbose_name': 'Tit'},
+            'name': {'default_direction': '',
+                     'verbose_name': 'Nam'},
+            'date': {'default_direction': '',
+                     'verbose_name': 'Dat'},
+        }
+        expected = OrderedDict(unordered_allowed_sort_fields)
+        view = TestSortableListView()
+        view.allowed_sort_fields = unordered_allowed_sort_fields
+        self.assertTrue(isinstance(view.allowed_sort_fields, OrderedDict))
+        try:
+            self.assertItemsEqual(view.allowed_sort_fields, expected)
+        except AttributeError:
+            self.assertCountEqual(view.allowed_sort_fields, expected)
+
+    def test_allowed_sort_fields_tuple_of_tuples(self):
+        ordered_allowed_sort_fields = (
+            ('title', {'default_direction': '-',
+                  'verbose_name': 'Tit'}),
+            ('name', {'default_direction': '',
+                     'verbose_name': 'Nam'}),
+            ('date', {'default_direction': '',
+                     'verbose_name': 'Dat'}),
+        )
+        expected = OrderedDict(ordered_allowed_sort_fields)
+        view = TestSortableListView()
+        view.allowed_sort_fields = ordered_allowed_sort_fields
+        self.assertTrue(isinstance(view.allowed_sort_fields, OrderedDict))
+        try:
+            self.assertItemsEqual(view.allowed_sort_fields, expected)
+        except AttributeError:
+            self.assertCountEqual(view.allowed_sort_fields, expected)
 
 class TestGetQueryset(TestCase):
 
@@ -320,6 +373,32 @@ class TestGetSortLinkList(TestCase):
             self.assertItemsEqual(sort_link_list, expected_list)
         except AttributeError:
             self.assertCountEqual(sort_link_list, expected_list)
+
+    def test_ordering(self):
+        view = TestSortableListView()
+        view.get_basic_sort_link = MagicMock(return_value='basic_sort_link')
+        view.get_sort_indicator = MagicMock(return_value='sort_indicator')
+
+        ordered_allowed_sort_fields = (
+            ('title', {'default_direction': '-',
+                  'verbose_name': 'Tit'}),
+            ('name', {'default_direction': '',
+                     'verbose_name': 'Nam'}),
+            ('date', {'default_direction': '',
+                     'verbose_name': 'Dat'}),
+        )
+
+        # default case
+        sort_link_list = view.get_sort_link_list(RequestFactory())
+        self.assertEqual(sort_link_list[0]['attrs'], 'id')
+
+        # permutations
+        for ordering in itertools.permutations(ordered_allowed_sort_fields):
+            view.allowed_sort_fields = ordering
+            sort_link_list = view.get_sort_link_list(RequestFactory())  
+            for idx, item in enumerate(ordering):
+                sort_field = item[0]
+                self.assertEqual(sort_link_list[idx]['attrs'], sort_field)
 
 
 class TestBasicSortLink(TestCase):
