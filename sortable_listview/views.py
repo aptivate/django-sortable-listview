@@ -1,10 +1,13 @@
 from __future__ import unicode_literals
 
+
+from django.utils.http import urlencode
+
+
 try:
-    from urllib import urlencode
     from urlparse import urlparse, parse_qs
 except ImportError:
-    from urllib.parse import urlencode, urlparse, parse_qs
+    from urllib.parse import urlparse, parse_qs
 
 try:
     # try with the standard library
@@ -95,7 +98,7 @@ class SortableListView(ListView):
         """
         to_remove = self.get_querystring_parameter_to_remove()
         query_string = urlparse(self.request.get_full_path()).query
-        query_dict = parse_qs(query_string)
+        query_dict = parse_qs(query_string.encode('utf-8'))
         for arg in to_remove:
             if arg in query_dict:
                 del query_dict[arg]

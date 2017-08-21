@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 try:
@@ -225,6 +227,16 @@ class TestGetQueryString(TestCase):
         self.view.request = request
         actual = self.view.get_querystring()
         self.assertEqual(actual, 'foo=bar')
+
+    def test_non_ascii_params_dont_throw_exception(self):
+        self.view.get_querystring_parameter_to_remove = MagicMock(
+            return_value=['page'])
+        params = {'foo': u'àhello', 'page': '1', 'extra': u'Ŧanother'}
+        request = RequestFactory().get('/', params)
+        self.view.request = request
+        actual = self.view.get_querystring()
+        self.assertTrue('extra=%C5%A6another' in actual)
+        self.assertTrue('foo=%C3%A0hello' in actual)
 
 
 class TestSetSort(TestCase):
