@@ -16,10 +16,10 @@ Features:
 Requirements
 ============
 
-    * Python (2.6, 2.7, 3.2, 3.3, 3.4)
-    * Django (1.4, 1.5, 1.6, 1.7, 1.8)
+These are the supported versions. Older versions may also work.
 
-(Tested against the latest version of each e.g. currently Python 2.7.4 & Django 1.5.12)
+    * Python (2.7, 3.3, 3.4, 3.5, 3.6)
+    * Django (1.8, 1.10, 1.11)
 
 
 Install
@@ -28,7 +28,7 @@ Using pip::
 
     pip install django-sortable-listview
 
-If you want to use the provided temaplates and CSS add ``'sortable_listview'`` to your INSTALLED_APPS in your django settings.
+If you want to use the provided templates and CSS add ``'sortable_listview'`` to your INSTALLED_APPS in your django settings.
 
 To see how to include the css and templates in your application, look at the example project. The css is just standard bootstrap.
 
@@ -60,6 +60,6 @@ To run the tests::
 
     tox
 
-You may not want to run the whole tox suite when you are doing development. 
+You may not want to run the whole tox suite when you are doing development.
 In this case, uncomment the extra lines in requirements-dev.txt, but please
 don't commit these changes. (Suggestions welcome on a better way to manage this)
