@@ -45,6 +45,7 @@ To run the example project. First make sure django and django-sortable-listview 
 Then from your cloned folder::
 
     cd example_project
+    python manage.py migrate
     python manage.py runserver
 
 You should be able to see the example project at localhost:8000. A database is provided with some sample content. The username and password is admin/admin
