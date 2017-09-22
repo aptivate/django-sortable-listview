@@ -13,3 +13,4 @@ dist
 .coverage
 .tox
 .eggs
+example_project/simple_blog/simple_blog.sqlite
