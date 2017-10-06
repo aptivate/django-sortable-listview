@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 install_requires = [
-    'django>=1.4',
+    'django>=1.8',
 ]
 
 try:
