@@ -323,7 +323,7 @@ class TestGetNextSortString(TestCase):
 
     def test_get_sort_string_is_called(self):
         self.view.get_next_sort_string('id')
-        self.view.get_sort_string.assert_called_once()
+        self.view.get_sort_string.assert_called_once_with('-id')
 
 
 class TestGetSortIndicator(TestCase):
