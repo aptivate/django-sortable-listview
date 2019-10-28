@@ -19,7 +19,7 @@ Requirements
 These are the supported versions. Older versions may also work.
 
     * Python (2.7, 3.5, 3.6, 3.7)
-    * Django (1.11, 2.1)
+    * Django (1.11, 2.1, 2.2)
 
 
 Install
