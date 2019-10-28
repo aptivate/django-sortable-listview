@@ -2,15 +2,9 @@ import os
 from setuptools import setup
 
 install_requires = [
-    'django>=1.8',
+    'django>1.11',
     'six'
 ]
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    # add backport to list of required modules
-    install_requires.append('ordereddict')
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.md')).read()
