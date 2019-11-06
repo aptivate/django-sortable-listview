@@ -6,6 +6,5 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', ArticleListView.as_view()),
-
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
 ]

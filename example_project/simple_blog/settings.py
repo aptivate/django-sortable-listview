@@ -75,7 +75,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '^x+vb79pfnjn@3ozbjwl&#xlo^_sybox877z24-*1cokdx%0ex'
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -90,28 +90,25 @@ ROOT_URLCONF = 'simple_blog.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'simple_blog.wsgi.application'
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [
-        os.path.join(BASE_DIR, 'templates'),
-    ],
-    'OPTIONS': {
-        'context_processors': [
-            'django.contrib.auth.context_processors.auth',
-            'django.template.context_processors.debug',
-            'django.template.context_processors.i18n',
-            'django.template.context_processors.media',
-            'django.template.context_processors.static',
-            'django.template.context_processors.tz',
-            'django.contrib.messages.context_processors.messages',
-            'django.template.context_processors.request',
-        ],
-        'loaders': [
-            'django.template.loaders.filesystem.Loader',
-            'django.template.loaders.app_directories.Loader',
-        ],
-    }
-}]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 INSTALLED_APPS = (
     'django.contrib.auth',
