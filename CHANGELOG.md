@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.43
+  * Fix for Python 3 regression for params to remove (thanks @bw-aus, @ghost, @birdsarah)
+  * Update tox to use Django 2.2 (thanks @birdsarah)
+
 ## 0.42
 
   * Fix for Django 1.11
