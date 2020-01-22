@@ -8,7 +8,6 @@ install_requires = [
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 CHANGELOG = open(os.path.join(os.path.dirname(__file__), 'CHANGELOG.md')).read()
-LICENSE = open(os.path.join(os.path.dirname(__file__), 'LICENSE.txt')).read()
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -18,7 +17,7 @@ setup(
     version='0.43',
     packages=['sortable_listview'],
     include_package_data=True,
-    license=LICENSE,
+    license='License :: OSI Approved :: MIT License',
     description='An extension of django\'s ListView that provides sorting',
     long_description=README + CHANGELOG,
     url='https://github.com/aptivate/django-sortable-listview',
