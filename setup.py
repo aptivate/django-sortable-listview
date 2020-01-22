@@ -19,6 +19,7 @@ setup(
     include_package_data=True,
     license='License :: OSI Approved :: MIT License',
     description='An extension of django\'s ListView that provides sorting',
+    long_description_content_type='text/markdown',
     long_description=README + CHANGELOG,
     url='https://github.com/aptivate/django-sortable-listview',
     author='Aptivate',
